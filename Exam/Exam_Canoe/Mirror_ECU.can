@@ -1,0 +1,89 @@
+﻿/*@!Encoding:65001*/
+includes
+{
+  
+}
+
+variables
+{
+
+  message Wakeup_Ack_msg Wakeup_Ack_msg_toBCM;
+  message Mirror_Status_mesg toBCM_Mirror_Status;
+  msTimer Mirror_Openning_duration;
+  msTimer Mirror_Closing_duration;
+  int startOpen = 0;
+  int timer_state=0;
+  int mirror_pos;
+  int position =90;
+  message Mirror_Status_mesg Mirror_pos;
+ 
+}
+/* Handle the reception of wakeup signal from BCM*/
+on message  NM_msg
+{
+  /* Send wakeup acknowledgment to BCM*/
+  output(Wakeup_Ack_msg_toBCM);
+  output(toBCM_Mirror_Status);
+}
+on message Open_msg
+{
+  
+  startOpen =1;
+  setTimer(Mirror_Openning_duration,250);
+}
+on message Close_msg
+{
+  
+  startOpen =1;
+  setTimer(Mirror_Closing_duration,250);
+}
+on timer Mirror_Openning_duration
+{
+    while (position)
+    {
+      Mirror_pos.L_mirror_position++;
+      Mirror_pos.R_mirror_position++;
+      output(Mirror_pos); 
+      position--;
+    }
+    /*Once it reaches its correct poision it stops*/
+   if ((Mirror_pos.L_mirror_position >= 90) && (Mirror_pos.R_mirror_position >=90))
+    {
+        cancelTimer(Mirror_Openning_duration); 
+        timer_state = 0;
+    }
+  
+}
+
+on timer Mirror_Closing_duration
+{
+    while (position)
+    {
+      Mirror_pos.L_mirror_position-=2;
+      Mirror_pos.R_mirror_position-=2;
+      output(Mirror_pos); 
+      position--;
+    }
+    /*Once it reaches its correct poision it stops*/
+   if ((Mirror_pos.L_mirror_position >= 90) && (Mirror_pos.R_mirror_position >=90))
+    {
+        cancelTimer(Mirror_Openning_duration); 
+        timer_state = 0;
+    }
+  
+}
+on message Mirror_Direction_Control
+{
+ if(Mirror_Direction_Control.l_move_miror_down_signal == on) 
+ {
+     setTimer(move_upward, 50);
+ }
+  
+  
+}
+on timer move_upward
+{
+  Mirror_pos.L_mirror_position++;
+  Mirror_pos.R_mirror_position++;
+  
+}

@@ -1,0 +1,121 @@
+﻿/*@!Encoding:65001*/
+includes
+{
+  
+}
+
+variables
+{
+   message NM_msg         NM_to_mirror;
+   message Wakeup_Ack_msg WakeupAckmsg_fromMirror;
+   message Open_msg       Open_to_mirror;
+   message Close_msg      Close_to_mirror;
+   message Mirror_Direction_Control mirror_directions;
+   message Mirror_Status_mesg mirror_status_msg;
+   message Sleep_msg sleep_to_mirror;
+   message Sleep_ack_msg sleep_ack_fromMirror;
+  /*Timer to implement wake up tsk once Kelima 5 var changed*/
+  msTimer BCM_wake;
+   msTimer wait_50;
+  /*Once system start will be by default set */
+  int sendingNM = 1;
+  int sleepAckReceived  = 0;
+}
+
+on sysvar Kelima15
+{
+  
+  setTimer(BCM_wake,50);
+  /*
+    Once kelima15 var changed it check once its off -> 0
+    will send close signal to mirror
+  */
+  if( @Kelima15 == 0)
+  {
+    /*BCM sending message to mirror to close then seep*/
+    output(Close_to_mirror);
+    output(sleep_to_mirror);
+    /*Reset wakeup signal*/
+    NM_to_mirror.wake_up_signal =0;
+    /*Timer will wait 50 */
+    
+      setTimer(wait_50,50);
+    
+    
+  }
+  
+}
+/*Once openswitch variable is triggered will send open signal to mirror*/
+on sysvar Switch_::Openswitch
+{
+  output(Open_to_mirror);
+}
+/*Once closeswitch variable is triggered will send close signal to mirror*/
+on sysvar Switch_::CloseSwitch
+{
+  output(Close_to_mirror);
+}
+/*Once l_move_down variable is triggered will sendl_move_miror_down_signal to mirror*/
+on sysvar Mirror_Directions::l_move_down 
+{
+  mirror_directions.l_move_miror_down_signal = 1; 
+  output(mirror_directions);
+}
+/*Once l_move_up variable is triggered will send l_move_miror_up_signal to mirror*/
+on sysvar Mirror_Directions::l_move_up 
+{
+  mirror_directions.l_move_miror_up_signal = 1; 
+  output(mirror_directions);
+}
+/*Once R_move_up variable is triggered will send R_move_miror_up_signal to mirror*/
+on sysvar Mirror_Directions::R_move_up 
+{
+  mirror_directions.R_move_miror_up_signal = 1; 
+  output(mirror_directions);
+}
+/*Once R_move_down variable is triggered will send R_move_miror_down_signal to mirror*/
+on sysvar Mirror_Directions::R_move_down 
+{
+  mirror_directions.R_move_miror_down_signal = 1; 
+  output(mirror_directions);
+}
+on timer BCM_wake
+{
+  /*if zero means acknowledgment message is recived */
+  if(  sendingNM ==1 )
+  {
+     output(NM_to_mirror);
+  }
+ 
+  setTimer(BCM_wake,50);
+  
+}
+/* Handle acknowledgment message from the Mirror ECU*/
+on message Wakeup_Ack_msg 
+{
+  /* Stop sending*/
+  sendingNM = 0;
+}
+/* Handle mirror status message from mirror ECU*/
+on message Mirror_Status_mesg 
+{
+  
+}
+ on message Sleep_ack_msg
+{
+  /*Once sleep ack is recived from mirror*/
+  sleepAckReceived = 1;
+}
+on timer wait_50
+{
+
+}
+/*Function to get status whenever required*/
+int sendingNM()
+{
+  return sendingNM;
+}
+int IsSleepAckReceived()
+{
+  return sleepAckReceived;
+}

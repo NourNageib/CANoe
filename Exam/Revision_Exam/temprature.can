@@ -1,0 +1,22 @@
+﻿/*@!Encoding:65001*/
+includes
+{
+  
+}
+
+variables
+{
+  msTimer temptimer;
+  /*creating message var fom msg temp*/
+  message  Temp Temp_mesg;
+}
+on timer temptimer
+{
+  output(Temp_mesg);
+  setTimer(temptimer , 50);
+}
+on sysvar Temprature::Sensor
+{
+  Temp_mesg.Degree = @Temprature::Sensor;
+  setTimer(temptimer , 50);
+}

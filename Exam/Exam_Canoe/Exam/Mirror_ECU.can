@@ -1,0 +1,33 @@
+﻿/*@!Encoding:65001*/
+includes
+{
+  
+}
+
+variables
+{
+
+  message Wakeup_Ack_msg Wakeup_Ack_msg_toBCM;
+  message Mirror_Status_mesg toBCM_Mirror_Status;
+  msTimer Mirror_Openning_duration;
+  int startOpen = 0;
+ 
+}
+/* Handle the reception of wakeup signal from BCM*/
+on message  NM_msg
+{
+  /* Send wakeup acknowledgment to BCM*/
+  output(Wakeup_Ack_msg_toBCM);
+  output(toBCM_Mirror_Status);
+}
+on message Open_msg
+{
+  
+  startOpen =1;
+}
+
+on timer Mirror_Openning_duration
+{
+  
+  
+}

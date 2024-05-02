@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<systemvariables version="4">
+  <namespace name="" comment="" interface="">
+    <namespace name="Calculator" comment="" interface="">
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="oprand1" comment="" bitcount="32" isSigned="false" encoding="65001" type="int" startValue="0" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="oprand2" comment="" bitcount="32" isSigned="false" encoding="65001" type="int" startValue="0" />
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="Opreators" comment="opreations to be done" bitcount="32" isSigned="false" encoding="65001" type="int" startValue="55" minValue="0" minValuePhys="0" maxValue="55" maxValuePhys="55">
+        <valuetable name="Operators" definesMinMax="true">
+          <valuetableentry value="0" lowerBound="0" upperBound="0" description="Addition" displayString="Addition" />
+          <valuetableentry value="1" lowerBound="1" upperBound="1" description="Subtraction" displayString="Subtraction" />
+          <valuetableentry value="2" lowerBound="2" upperBound="2" description="Multiplication" displayString="Multiplication" />
+          <valuetableentry value="3" lowerBound="3" upperBound="3" description="Division" displayString="Division" />
+          <valuetableentry value="55" lowerBound="55" upperBound="55" description="invalid" displayString="invalid" />
+        </valuetable>
+      </variable>
+      <variable anlyzLocal="2" readOnly="false" valueSequence="false" unit="" name="Result" comment="" bitcount="32" isSigned="false" encoding="65001" type="int" startValue="0" />
+    </namespace>
+  </namespace>
+</systemvariables>

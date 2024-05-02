@@ -1,0 +1,21 @@
+﻿/*@!Encoding:65001*/
+includes
+{
+  
+}
+
+variables
+{
+ 
+  msTimer tim;
+}
+on start
+{
+  setTimer(tim,50); 
+}
+
+on timer tim
+{
+ @Group_A::member1++;
+  setTimer(tim,50);
+}
